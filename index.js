@@ -23,6 +23,21 @@ db.connect((err) => {
 
 app.use(bodyParser.json());
 
+// get all data
+
+app.get("/", (req, res) => {
+  db.query(
+    "SELECT c.class_id, d.department_id AS department_id, c.name AS class_name, d.name AS department_name FROM class AS c INNER JOIN department AS d ON c.department_id = d.department_id;",
+    (err, result) => {
+      if (err) {
+        res.status(500).send("Error retrieving classes");
+      } else {
+        res.json(result);
+      }
+    }
+  );
+});
+
 // Get all departments
 app.get("/departments", (req, res) => {
   db.query("SELECT * FROM department", (err, result) => {
@@ -84,6 +99,21 @@ app.put("/classes/:id", (req, res) => {
       }
     );
   }
+});
+app.get("/classes/:id", (req, res) => {
+  const classId = req.params.id;
+
+  db.query(
+    `SELECT * FROM react_form.class WHERE class_id = ${classId}`,
+
+    (err, result) => {
+      if (err) {
+        res.status(500).send("Error updating class");
+      } else {
+        res.send(result);
+      }
+    }
+  );
 });
 
 // Delete a class
