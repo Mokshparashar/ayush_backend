@@ -48,6 +48,20 @@ app.get("/departments", (req, res) => {
     }
   });
 });
+// Get all departments
+app.get("/departments/:id", (req, res) => {
+  const id = req.params.id;
+  db.query(
+    `SELECT * FROM department where department_id = ${id}`,
+    (err, result) => {
+      if (err) {
+        res.status(500).send("Error retrieving departments");
+      } else {
+        res.json(result);
+      }
+    }
+  );
+});
 
 // Get all classes
 app.get("/classes", (req, res) => {
